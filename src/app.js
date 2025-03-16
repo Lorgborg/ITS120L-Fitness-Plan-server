@@ -4,8 +4,15 @@ require("dotenv").config();
 
 const app = express();
 
+const corsOptions = {
+    origin: "*"
+}
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json())
 app.use(express.json());
 
 // Import API routes
