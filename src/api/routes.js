@@ -1,9 +1,19 @@
+// import libraries
 const express = require("express");
 const router = express.Router();
+const OpenAI = require("openai");
+const jwtDecode = require("jwt-decode");
+require('dotenv').config();
+
+// import utility files from public
 const connectToMongoDB = require("../../public/connectToMongoDB")
 const getDailyCalorie = require("../../public/getDailyCalorie");
 const createSession = require("../../public/createSession");
 const getDocumentsByDay = require("../../public/getDocumentsByDay");
+
+const openai = new OpenAI({
+    apiKey: process.env.openAiKey,
+});
 
 // Sample API route
 router.get("/", (req, res) => {
