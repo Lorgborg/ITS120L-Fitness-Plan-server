@@ -28,7 +28,7 @@ router.post("/getUser", async (req, res) => {
     res.status(201).json(user)
 })
 
-app.post("/api/signup", async (req, res) => {
+router.post("/api/signup", async (req, res) => {
     console.log(req.body)
     let connection = await connectToMongoDB();
     const collection = connection.db('MyFit').collection("users");
@@ -48,7 +48,7 @@ app.post("/api/signup", async (req, res) => {
     res.status(200).send()
 })
   
-app.post("/api/login", async (req, res) => { 
+router.post("/api/login", async (req, res) => { 
     const decoded = jwtDecode.jwtDecode(req.body.raw);
     let connection = await connectToMongoDB();
     console.log("received mail: " + decoded.email)
@@ -71,7 +71,7 @@ app.post("/api/login", async (req, res) => {
     }
 })
 
-app.post("/api/getResponse", async (req, res) => {
+router.post("/api/getResponse", async (req, res) => {
     const user = req.body.user
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
@@ -88,7 +88,7 @@ app.post("/api/getResponse", async (req, res) => {
     res.status(201).json(completion.choices[0].message)
 })
   
-app.post("/api/addMeal", async (req, res) => {
+router.post("/api/addMeal", async (req, res) => {
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         store: true,
@@ -101,7 +101,7 @@ app.post("/api/addMeal", async (req, res) => {
     res.status(201).json(completion.choices[0].message)
 })
   
-app.post("/api/saveMeal", async (req, res) => {
+router.post("/api/saveMeal", async (req, res) => {
     let connection = await connectToMongoDB()
     const collection = connection.db('MyFit').collection("meals");
     await collection.insertOne({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: new Date()})
@@ -109,7 +109,7 @@ app.post("/api/saveMeal", async (req, res) => {
     res.status(201).json()
 })
   
-app.post("/api/getMeals", async (req, res) => {
+router.post("/api/getMeals", async (req, res) => {
     let connection = await connectToMongoDB()
     const collection = connection.db('MyFit').collection("meals");
     const meals = await getDocumentsByDay(req.body.date, req.body.email, collection)
