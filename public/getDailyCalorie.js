@@ -18,7 +18,7 @@ function calculateDailyCalories(weight, height, age, gender, idealWeight, goalDa
     }
 
     // Calculate TDEE (Total Daily Energy Expenditure)
-    let TDEE = BMR * 1.2; // Default to sedentary if invalid input
+    let TDEE = BMR * 1.6; // Default to sedentary if invalid input
 
     // Calculate total calories needed to gain/lose the weight
     const weightChange = idealWeight - weight;

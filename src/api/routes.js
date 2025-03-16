@@ -28,10 +28,11 @@ router.post("/getUser", async (req, res) => {
     res.status(201).json(user)
 })
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => { 
     console.log(req.body)
     let connection = await connectToMongoDB();
     const collection = connection.db('MyFit').collection("users");
+    if(!await collection.findOne({email: req.body.email})) res.json({message: "account already registered"})
     const calculation = getDailyCalorie(req.body.weight, req.body.height, req.body.age, req.body.gender, req.body.idealWeight, req.body.time)
     console.log(calculation)
     await collection.insertOne({
@@ -43,25 +44,31 @@ router.post("/signup", async (req, res) => {
         nationality: req.body.nationality,
         idealWeight: req.body.idealWeight,
         dailyIntake: calculation.dailyCalorieIntake,
+        sex: req.body.sex,
         time: req.body.time
     });
-    res.status(200).send()
+    res.status(200).send() 
 })
   
 router.post("/login", async (req, res) => { 
+    console.log(req.body.raw) 
     const decoded = jwtDecode.jwtDecode(req.body.raw);
     let connection = await connectToMongoDB();
     console.log("received mail: " + decoded.email)
     const collection = connection.db('MyFit').collection('users');
-    const exists = await collection.findOne({ email: decoded.email })
-    if(exists) {
+    const user = await collection.findOne({ email: decoded.email })
+    if(user) { 
         console.log("found")
+        req.session.userId = user._id;
+        const sessions = connection.db('MyFit').collection('sessions')
+        req.session.user = { email: user.email }
         res.status(201).json(({
-        status: decoded,
-        message: "../dashboard", 
-        id: 1,
+            status: decoded,
+            message: "../dashboard", 
+            id: 1,
+            user: req.session.user
         }))
-    } else if (!exists) {
+    } else if (!user) {
         console.log("sending back signunp: " + decoded)
         res.status(201).json(({
         status: decoded,
@@ -70,6 +77,22 @@ router.post("/login", async (req, res) => {
         }))
     }
 })
+
+router.post('/profile', (req, res) => {
+    if (!req.session.user) return res.status(401).json({ message: 'Not logged in' });
+ 
+    res.status(201).json({ message: 'Profile data', user: req.session.user });
+ });
+
+ // **Logout Route**
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+       if (err) return res.status(500).json({ message: 'Logout failed' });
+ 
+       res.clearCookie('connect.sid'); // Clear session cookie
+       res.status(201).json({ message: 'Logged out successfully' });
+    });
+});
 
 router.post("/getResponse", async (req, res) => {
     const user = req.body.user
