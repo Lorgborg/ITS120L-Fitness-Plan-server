@@ -4,13 +4,13 @@ require('dotenv').config(); // Load environment variables from .env
 const app = express();
 const cors  = require("cors");
 const OpenAI = require("openai");
-const getDailyCalorie = require("../public/getDailyCalorie")
-const createSession = require("../public/createSession")
+const getDailyCalorie = require("./public/getDailyCalorie")
+const createSession = require("./public/createSession")
 const jwtDecode = require("jwt-decode");
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const getDocumentsByDay = require("../public/getDocumentsByDay");
+const getDocumentsByDay = require("../server/public/getDocumentsByDay");
 const uri = process.env.uri;
 const origin = process.env.origin;
 
