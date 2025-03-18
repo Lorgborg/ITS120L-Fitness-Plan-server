@@ -71,7 +71,6 @@ router.post("/login", async (req, res) => {
                 return res.status(500).json({ error: "Session save failed" });
             }
             console.log("Session After Save:", req.session);
-            res.json({ message: "Logged in", session: req.session.user });
         });
         res.status(201).json(({
             status: decoded,
