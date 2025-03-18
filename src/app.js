@@ -28,9 +28,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json())
 app.use(express.json());
+app.use((req, res, next) => {
+    console.log("Cookies:", req.cookies);
+    console.log("Session:", req.session);
+    next();
+});
 app.set("trust proxy", 1);
 app.use(session({
-    secret: "super-secret-key",
+    secret: process.env.SESSION_SECRET || "super-secret-key",
     resave: false,
     saveUninitialized: false,
     store: store,  // Make sure this store works
@@ -42,11 +47,6 @@ app.use(session({
         domain: "myfit-server.vercel.app"
     }
 }));
-app.use((req, res, next) => {
-    console.log("Cookies:", req.cookies);
-    console.log("Session:", req.session);
-    next();
-});
 app.get("/api/debug-session", (req, res) => {
     console.log("Session ID:", req.sessionID);
     console.log("Session Data:", req.session);
