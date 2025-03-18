@@ -65,7 +65,7 @@ router.post("/login", async (req, res) => {
         req.session.userId = user._id;
         const sessions = connection.db('MyFit').collection('sessions')
         req.session.user = { email: user.email }
-        req.session.save(err => {
+        await req.session.save(err => {
             if (err) {
                 console.error("Session Save Error:", err);
                 return res.status(500).json({ error: "Session save failed" });
