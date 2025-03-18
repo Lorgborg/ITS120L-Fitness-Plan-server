@@ -117,7 +117,7 @@ router.post("/getResponse", async (req, res) => {
   
 router.post("/addMeal", async (req, res) => {
     const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         store: true,
         messages: [
         {"role": "user", "content": `calories of the meal I am about to send. Return ONLY A NUMBER. RETURN 0 IF NOT A FOOD, be accurate as possible`},
