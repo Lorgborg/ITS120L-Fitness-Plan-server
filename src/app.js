@@ -30,7 +30,7 @@ app.use(bodyParser.json())
 app.use(express.json());
 app.set("trust proxy", 1);
 app.use(session({
-    secret: process.env.SESSION_SECRET || "super-secret-key",
+    secret: "super-secret-key",
     resave: false,
     saveUninitialized: false,
     store: store,  // Make sure this store works
