@@ -88,7 +88,7 @@ router.post('/profile', async (req, res) => {
         const connection = await connectToMongoDB()
         const collection = connection.db('MyFit').collection("users");
         const user = await collection.findOne({email: req.body.email})
-        res.status(201).json({ message: 'Profile data', user: {user: user} });
+        res.status(201).json({ message: 'Profile data', user: user });
     } else {
         res.status(201).json({ message: 'Profile data', user: req.session.user });
     }
