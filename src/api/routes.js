@@ -106,7 +106,7 @@ router.post("/getResponse", async (req, res) => {
         messages: [
         {"role": "user", "content": `My name is ${user.username}, My weight is currently ${user.weight} kgs. I am ${user.age}, my height is ${user.height} and I would like to achieve a weight of ${user.idealWeight} and I live in ${user.nationality}. I want to have a daily caloric intake of ${user.dailyIntake} calories. Today I have eaten ${req.body.calorieToday}. If what I'm doing is not good for my targetted weight, please advice me otherwise. please advice me but only when I'm asking for fitness-related advice. Keep the answers short, friendly, consice and take into account my nationality.`},
         {"role": "user", "content": `Remember all my personal information when I ask the next prompts. Respond with no formatting, essay format and personal`},
-        {"role": "user", "content": `If my daily calorie goal is already met, advice me against going over it. If it isn't met yet, advice me towards it. If asked on diet and excercise, advice with my nationality in mind`},
+        {"role": "user", "content": `If my daily calorie goal is already met, advice me against going over it. If it isn't met yet, advice me towards it. If asked on diet and excercise, advice with my nationality in mind. If asking specifically how to add or register meals, say to look at the upper right`},
         {"role": "user", "content": req.body.prompt},
         ],
     });
