@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const MongoDBStore = require('connect-mongodb-session')(session);
 require("dotenv").config();
 
@@ -44,7 +45,6 @@ app.use(session({
 
 // Import API routes
 const apiRoutes = require("./api/routes");
-const cookieParser = require("cookie-parser");
 app.use("/api", apiRoutes);
 
 // Default route
