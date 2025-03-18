@@ -43,7 +43,8 @@ app.use(session({
         secure: true, // ✅ Required for HTTPS (disable for local testing)
         httpOnly: true,
         sameSite: "none", // ✅ Required for cross-origin cookies
-        maxAge: 1000 * 60 * 60 * 24 // 1 day
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        domain: "myfit-server.vercel.app"
     }
 }));
 app.get("/api/debug-session", (req, res) => {
