@@ -10,6 +10,9 @@ const connectToMongoDB = require("../../public/connectToMongoDB")
 const getDailyCalorie = require("../../public/getDailyCalorie");
 const createSession = require("../../public/createSession");
 const getDocumentsByDay = require("../../public/getDocumentsByDay");
+const getNationDate = require("../../public/getNationDate");
+const getPHTDateString = require("../../public/getPHTDateString")
+
 
 const openai = new OpenAI({
     apiKey: process.env.openAiKey,
@@ -76,6 +79,7 @@ router.post("/login", async (req, res) => {
         id: 1,
         }))
     }
+    
 })
 
 router.post('/profile', (req, res) => {
@@ -127,16 +131,62 @@ router.post("/addMeal", async (req, res) => {
 router.post("/saveMeal", async (req, res) => {
     let connection = await connectToMongoDB()
     const collection = connection.db('MyFit').collection("meals");
-    await collection.insertOne({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: new Date()})
-    console.log({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: new Date()})
+    await collection.insertOne({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: getNationDate()})
+    console.log({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: getNationDate()})
     res.status(201).json()
+
+    
 })
   
+router.post("/getDate", async (req, res) => {
+    res.status(201).json(getNationDate())
+})
+
 router.post("/getMeals", async (req, res) => {
     let connection = await connectToMongoDB()
     const collection = connection.db('MyFit').collection("meals");
     const meals = await getDocumentsByDay(req.body.date, req.body.email, collection)
     res.status(201).json(meals)
+
+    
+})
+
+router.post("/getWeekMeals", async (req, res) => {
+    console.log(req.body)
+    let connection = await connectToMongoDB()
+    const collection = connection.db('MyFit').collection("meals");
+
+    // Get date 7 days ago
+    const sevenDaysAgo = getNationDate();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const meals = await collection.find(
+        { email: req.body.email, date: { $gte: sevenDaysAgo } }
+     ).toArray();
+
+    const today = new Date();
+    const past7Days = {};
+
+    for (let i = 0; i < 7; i++) {
+        const date = new Date();
+        date.setDate(today.getDate() - i);
+        const dateString = getPHTDateString(date);
+        past7Days[dateString] = 0;
+    }
+    
+    // Sum up calories for each day, considering PHT timezone
+    meals.forEach(({ calories, date }) => {
+        const dateObj = new Date(date);
+        const dateString = getPHTDateString(dateObj);
+        
+        if (past7Days.hasOwnProperty(dateString)) {
+            past7Days[dateString] += parseInt(calories, 10);
+        }
+    });
+    
+    res.json(past7Days);
+
+    ;
 })
 
 module.exports = router;
