@@ -55,18 +55,6 @@ app.get("/api/debug-session", (req, res) => {
         sessionData: req.session
     });
 });
-app.use((req, res, next) => {
-    console.log("🔹 Incoming Request:");
-    console.log("🔹 Cookies:", req.cookies);
-    console.log("🔹 Session ID:", req.sessionID);
-    console.log("🔹 Session Data:", req.session);
-    
-    if (!req.session.user) {
-        console.log("⚠️ No session found, sending 401");
-        return res.status(201).json({ error: "Unauthorized - No session found" });
-    }
-    next();
-});
 
 // Import API routes
 const apiRoutes = require("./api/routes");
