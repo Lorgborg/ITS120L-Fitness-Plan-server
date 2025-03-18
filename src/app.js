@@ -38,9 +38,22 @@ app.use(session({
     secret: process.env.SESSION_SECRET || "super-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: store,
-    cookie: { secure: true, sameSite: 'none', httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }, // 1 day
+    store: store,  // Make sure this store works
+    cookie: {
+        secure: true, // ✅ Required for HTTPS (disable for local testing)
+        httpOnly: true,
+        sameSite: "none", // ✅ Required for cross-origin cookies
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
 }));
+app.get("/api/debug-session", (req, res) => {
+    console.log("Session ID:", req.sessionID);
+    console.log("Session Data:", req.session);
+    res.json({
+        sessionID: req.sessionID,
+        sessionData: req.session
+    });
+});
 
 // Import API routes
 const apiRoutes = require("./api/routes");
