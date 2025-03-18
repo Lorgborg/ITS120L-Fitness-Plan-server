@@ -21,12 +21,12 @@ const store = new MongoDBStore({
  });
 
 // Middleware
+app.use(cookieParser())
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json())
-app.use(cookieParser())
 app.use(express.json());
 app.use((req, res, next) => {
     console.log("Cookies:", req.cookies);
