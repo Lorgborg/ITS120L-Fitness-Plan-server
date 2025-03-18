@@ -55,6 +55,13 @@ app.get("/api/debug-session", (req, res) => {
         sessionData: req.session
     });
 });
+app.use((req, res, next) => {
+    console.log("🔍 Middleware: Session Data:", req.session);
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ error: "Unauthorized - No session" });
+    }
+    next();
+});
 
 // Import API routes
 const apiRoutes = require("./api/routes");
