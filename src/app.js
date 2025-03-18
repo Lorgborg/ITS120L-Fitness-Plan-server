@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 app.set("trust proxy", 1);
 app.use(session({
     secret: process.env.SESSION_SECRET || "super-secret-key",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     store: store,  // Make sure this store works
     cookie: {
