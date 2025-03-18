@@ -39,8 +39,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: store,
-    cookie: { secure: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }, // 1 day
-    sameSite: 'none',
+    cookie: { secure: true, sameSite: 'none', httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }, // 1 day
 }));
 
 // Import API routes
