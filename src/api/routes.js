@@ -117,10 +117,10 @@ router.post("/getResponse", async (req, res) => {
   
 router.post("/addMeal", async (req, res) => {
     const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         store: true,
         messages: [
-        {"role": "user", "content": `calories of the meal I am about to send. Return ONLY A NUMBER. RETURN 0 IF NOT A FOOD`},
+        {"role": "user", "content": `calories of the meal I am about to send. Return ONLY A NUMBER. RETURN 0 IF NOT A FOOD, be accurate as possible`},
         {"role": "user", "content": req.body.prompt},
         ],
     });
@@ -134,8 +134,6 @@ router.post("/saveMeal", async (req, res) => {
     await collection.insertOne({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: getNationDate()})
     console.log({ email: req.body.email, meal: req.body.meal, calories: req.body.calories, date: getNationDate()})
     res.status(201).json()
-
-    
 })
   
 router.post("/getDate", async (req, res) => {
@@ -147,8 +145,6 @@ router.post("/getMeals", async (req, res) => {
     const collection = connection.db('MyFit').collection("meals");
     const meals = await getDocumentsByDay(req.body.date, req.body.email, collection)
     res.status(201).json(meals)
-
-    
 })
 
 router.post("/getWeekMeals", async (req, res) => {
