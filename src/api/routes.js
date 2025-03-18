@@ -83,7 +83,7 @@ router.post("/login", async (req, res) => {
 })
 
 router.post('/profile', async (req, res) => {
-    if (!req.session.user) {
+    if (!req.session.user || req.session.user) {
         // return res.status(401).json({ message: 'Not logged in' });
         const connection = await connectToMongoDB()
         const collection = connection.db('MyFit').collection("users");
