@@ -83,15 +83,9 @@ router.post("/login", async (req, res) => {
 })
 
 router.post('/profile', async (req, res) => {
-    if (!req.session.user) {
-        // return res.status(401).json({ message: 'Not logged in' });
-        const connection = await connectToMongoDB()
-        const collection = connection.db('MyFit').collection("users");
-        const user = await collection.findOne({email: req.body.email})
-        res.status(201).json({ message: 'Profile data', user: user });
-    } else {
-        res.status(201).json({ message: 'Profile data', user: req.session.user });
-    }
+    if (!req.session.user) return res.status(401).json({ message: 'Not logged in' });
+    res.status(201).json({ message: 'Profile data', user: req.session.user });
+
  });
 
  // **Logout Route**
