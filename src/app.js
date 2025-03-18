@@ -63,7 +63,7 @@ app.use((req, res, next) => {
     
     if (!req.session.user) {
         console.log("⚠️ No session found, sending 401");
-        return res.status(401).json({ error: "Unauthorized - No session found" });
+        return res.status(201).json({ error: "Unauthorized - No session found" });
     }
     next();
 });
